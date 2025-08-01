@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  scroll-behavior: smooth;
+  background-color: white;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Poppins";
+}
+
+html {
+  font-size: 62.5%;
+}
+
+nav {
+  height: 10rem;
+  width: 100%;
+  padding: 5rem 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#left {
+  display: flex;
+  align-items: center;
+}
+
+#left i {
+  font-size: 3.2rem;
+}
+
+#left h1 {
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+#right {
+  display: flex;
+  align-items: center;
+  gap: 7rem;
+}
+
+#right a {
+  font-size: 2rem;
+  text-decoration: none;
+  color: black;
+  position: relative;
+}
+
+#right a::after {
+  content: "";
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  width: 0;
+  height: 0.2rem;
+  background-color: black;
+  transition: width 0.3s ease-in-out;
+}
+
+#right a:hover::after {
+  width: 100%;
+}
+
+#right #reglog {
+  position: relative;
+  padding: 0.7rem;
+  border-radius: 25px;
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: black;
+  overflow: hidden;
+  z-index: 1;
+  border: 2px solid black;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+#right #reglog::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background-color: rgba(0, 128, 0, 0.863);
+  z-index: -1;
+  border-radius: inherit;
+  transition: height 0.3s ease-in-out;
+}
+
+#right #reglog:hover::before {
+  height: 100%;
+}
+
+#right #reglog:hover {
+  color: white;
+  transform: scale(1.05);
+}
+
+#hero {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  padding: 4rem;
+}
+
+#Content {
+  width: 50%;
+  height: 100%;
+}
+
+#Content h1 {
+  font-size: 5rem;
+}
+
+#Content h3 {
+  font-size: 2rem;
+  margin-top: 2rem;
+}
+
+#imageContainer {
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  top: 0;
+  right: 0;
+  background-image: url("../cssFiles/image.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-blend-mode: lighten;
+}
+
+
+#about {
+  position: relative;
+  top: 4rem;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#folder {
+  height: 90%;
+  width: 20%;
+  border: 2px solid black;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#lock {
+  height: 90%;
+  width: 20%;
+  border: 2px solid black;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+#content h2 {
+  text-align: center;
+  font-size: 3rem;
+}
+
+#content p {
+  padding:5vw;
+  font-size: 2rem;
+  text-align: center;
+}
+
+#upload {
+  height: 90%;
+  width: 20%;
+  border: 2px solid black;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card {
+  text-align: center;
+}
+.card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#rolebtn {
+  border: 2px solid black;
+  border-radius: 50%;
+  background-color: rgb(0, 128, 0);
+  color: white;
+  padding: 1vw;
+}
+#rolebtn span {
+  font-size: 1.7rem;
+}
+
+.profile-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-card {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: none;
+  min-width: 200px;
+  z-index: 999;
+}
+
+.profile-container:hover .profile-card {
+  display: block;
+}
+
+.profile-card p {
+  margin: 5px 0;
+}
+
+.profile-card button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #1b10f0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

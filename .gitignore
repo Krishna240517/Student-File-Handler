@@ -1,0 +1,27 @@
+# Dependency directories
+# Node.js dependencies for both frontend and backend
+node_modules/
+
+# Environment variables
+# This file contains sensitive information and should not be committed.
+.env
+
+# Build artifacts
+# The output folder from your Vite build.
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.log*
+
+# OS-related files
+.DS_Store
+Thumbs.db
+
+# Optional: You can choose to ignore the top-level package-lock.json
+# if you are managing dependencies separately in the backend and frontend folders.
+# If your project is a monorepo, it's a good practice to keep them.
+# For now, let's assume you want to ignore the top-level lock file.
+# package-lock.json

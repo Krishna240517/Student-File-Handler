@@ -1,0 +1,45 @@
+.group-view {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.group-header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+.group-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.group-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.group-tabs button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.group-tabs .active {
+  background: #4285f4;
+  color: white;
+}
+
+.file-card, .member-list li {
+  background: white;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}

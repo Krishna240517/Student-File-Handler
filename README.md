@@ -7,7 +7,7 @@ A centralized platform designed to efficiently manage and organize all student f
 ## 🚀 Features
 
 * **Centralized File Management:** Upload and manage all files in a single, organized place.
-* **Role-Based Access Control:** Secure file access with different roles (e.g., Admin, Instructor, Student).
+* **Role-Based Access Control:** Secure file access with different roles (e.g., Admin, user);
 * **Simplified Structure:** A clean, intuitive design to reduce confusion and improve usability.
 * **Flexible File Storage:** Integrates with various cloud storage solutions like Backblaze B2, with support for local storage.
 
@@ -63,4 +63,4 @@ The frontend is currently under active development. If you'd like to contribute,
 
 ## 📬 Contact
 
-For any questions, suggestions, or collaboration opportunities, please feel free to [open an issue](https://github.com/your-username/Student-File-Handler/issues) or reach out via email.
+For any questions, suggestions, or collaboration opportunities, please feel free to [open an issue](https://github.com/your-username/Student-File-Handler/issues) or reach out via email.[9827711306.kpswain@gmail.com]

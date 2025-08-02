@@ -263,3 +263,9 @@ nav {
   border-radius: 5px;
   cursor: pointer;
 }
+#logout {
+  border-radius: 25px;
+  font-size: 2rem;
+  background-color: red;
+  color: white;
+}

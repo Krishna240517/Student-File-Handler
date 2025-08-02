@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useContext } from 'react';
 import { UserContext } from '../context/userContext.jsx';
 import { useNavigate } from "react-router-dom";
@@ -6,12 +6,11 @@ import { Folder, Lock, Upload } from 'lucide-react';
 import axios from 'axios';
 import './cssFiles/LandingPage.css';
 const LandingPage = () => {
-  const { setUser } = useContext(UserContext);
-  const [role, setRole] = useState(null);
-  const [name, setName] = useState("");
-
+  const { user, setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+
   useEffect(() => {
     const cards = document.querySelectorAll('.card');
     const observer = new IntersectionObserver((entries) => {
@@ -28,27 +27,11 @@ const LandingPage = () => {
     cards.forEach(card => observer.observe(card));
   }, []);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("http://localhost:3000/api/v1/auth/profile", {
-          withCredentials: true
-        })
-        const userInfo = response.data.user;
-        setName(userInfo.name);
-        setRole(userInfo.role);
-      } catch (err) {
-        console.error("Error fetching userinfo profile", err);
-      }
-    }
-    fetchData();
-  }, [])
-
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/api/v1/auth/logout", {
-        withCredentials: true
-      })
+      await axios.post("http://localhost:3000/api/v1/auth/logout", {}, {
+        withCredentials: true  
+      });
       setUser(null);
       navigate("/auth")
     } catch (err) {
@@ -78,14 +61,14 @@ const LandingPage = () => {
             <a href="#contact">Contact</a>
             <a href="#" onClick={handleGroupRedirect}>My Groups</a>
             <button id="reglog" onClick={handleAuthRedirect}>Register/Login</button>
+            <button id="logout" onClick={handleLogout}>Logout</button>
           </div>
 
           <div className="profile-container">
             <img src="./cssFiles/profile-user.png" alt="Profile" className="profile-icon" />
             <div className="profile-card">
-              <p><strong>Name:</strong> {name}</p>
-              <p><strong>Role:</strong> {role}</p>
-              <button onClick={handleLogout}>Logout</button>
+              <p><strong>Name:</strong> {user?.name}</p>
+              <p><strong>Role:</strong> {user?.role}</p>
             </div>
           </div>
         </nav>

@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
                 const res = await axios.get("http://localhost:3000/api/v1/auth/profile",{
                     withCredentials: true
                 })
-                setUser(res.data);
+                setUser(res.data.user);
             } catch(err) {
                 setUser(null);
                 console.error(err);

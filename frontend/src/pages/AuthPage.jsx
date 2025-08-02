@@ -48,7 +48,7 @@ const AuthPage = () => {
           credentials: "include",
         });
         const userData = await profileRes.json();
-        setUser(userData); // 🧠 this updates UserContext globally
+        setUser(userData.user);
       } catch (err) {
         console.error("Failed to fetch user profile after auth", err);
       }

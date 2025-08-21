@@ -8,7 +8,8 @@ export const signup = async (req, res) => {
         const existing = await User.findOne({ email });
         if (existing) {
             if (existing.provider === "google") {
-                return res.status(400).json({message: "This email is already registered with Google. Please use Google login.",
+                return res.status(400).json({
+                    message: "This email is already registered with Google. Please use Google login.",
                 });
             }
             return res.status(400).json({ message: "User already exists" });
@@ -39,14 +40,14 @@ export const signup = async (req, res) => {
         res
             .cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Lax",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 15 * 60 * 1000 // 15 minutes
             })
             .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Lax",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
             .json({
@@ -90,14 +91,14 @@ export const login = async (req, res) => {
         res
             .cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Lax",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 15 * 60 * 1000 // 15 minutes
             })
             .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Lax",
+                ssecure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
             .json({
@@ -117,8 +118,8 @@ export const logout = async (req, res) => {
 
             res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Lax",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
             return res.status(204).json({ message: "No refresh token found" });
         }
@@ -126,8 +127,8 @@ export const logout = async (req, res) => {
         const user = await User.findOne({ refreshToken });
         res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "Lax",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
 
         if (user) {
@@ -136,8 +137,8 @@ export const logout = async (req, res) => {
         }
         res.clearCookie("accessToken", {
             httpOnly: true,
-            secure: false,
-            sameSite: "Lax"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
         return res.status(200).json({ message: "Logout successful" });
     } catch (error) {
@@ -154,7 +155,7 @@ export const me = async (req, res) => {
     } catch (error) {
         res.send("Could not fetch the user");
     }
-}   
+}
 
 export const refresh = (req, res) => {
     const token = req.cookies.refreshToken;
@@ -166,16 +167,16 @@ export const refresh = (req, res) => {
         const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
         const newAccessToken = jwt.sign(
-            { id: decoded._id, }, 
+            { id: decoded._id, },
             process.env.JWT_SECRET,
-            { expiresIn: "7m" }  
+            { expiresIn: "7m" }
         );
 
         res.cookie("accessToken", newAccessToken, {
             httpOnly: true,
-            secure: false,
-            sameSite: "Lax",
-            maxAge: 7 * 60 * 1000 
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 60 * 1000
         });
 
         return res.json({ success: true });

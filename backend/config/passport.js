@@ -13,12 +13,12 @@ passport.use(new GoogleStrategy({
     try {
         const email = profile.emails[0]?.value;
         const existingUser = await User.findOne({email});
-        //case 1: User exists with Google Provider ->> login
+        //case 1: User exists with Google Provider ->..> login
         if(existingUser && existingUser.provider === "google") {
             return done(null,existingUser);
         }
 
-        //case 2: User exists with localProvider -> block google login
+        //case 2: User exists with localProvider -...> block google login
         if(existingUser && existingUser.provider === "local") {
             return done(null, false, {msg: "This email is already registered with email/password. Please use that method to log in.",})
         }

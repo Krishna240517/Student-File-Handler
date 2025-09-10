@@ -34,8 +34,6 @@ const Group = () => {
       </div>
     );
   }
-
-  // Step 1: Pick file
   const handleFileSelect = (e) => {
     setSelectedFile(e.target.files[0]);
   };
@@ -70,7 +68,6 @@ const Group = () => {
     }
   };
 
-  // Delete file
   const handleDeleteFile = async (fileId) => {
     try {
       await api.delete(`/user-file/delete/${fileId}`, {

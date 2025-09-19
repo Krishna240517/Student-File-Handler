@@ -13,29 +13,33 @@ const MyGroups = () => {
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    async function fetchGroups() {
-      try {
-        const response = await api.get(
-          "/user-group/get-my-groups",
-          { withCredentials: true }
-        );
-        setGroups(response.data.userGroups);
-      } catch (error) {
-        console.error("Error fetching group data:", error);
-      }
+  // reusable fetch
+  const fetchGroups = async () => {
+    try {
+      const response = await api.get("/user-group/get-my-groups", {
+        withCredentials: true,
+      });
+      setGroups(response.data.userGroups);
+    } catch (error) {
+      console.error("Error fetching group data:", error);
     }
+  };
+
+  // initial load
+  useEffect(() => {
     fetchGroups();
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 flex flex-col items-center p-6 relative">
       <header className="mb-10 text-center">
-        <h1 className="text-4xl font-bold text-white mb-2">Welcome, {user.name}</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">
+          Welcome, {user.name}
+        </h1>
         <h2 className="text-xl text-gray-400">Your Groups</h2>
       </header>
 
-      {/* Inside MyGroups component */}
+      {/* Join Group Modal */}
       {showJoinInput && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -44,22 +48,25 @@ const MyGroups = () => {
           className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50"
         >
           <JoinGroupInline
-            onJoin={(newGroup) => {
-              if (newGroup) setGroups((prev) => [...prev, newGroup]); 
-              setShowJoinInput(false); 
+            onJoin={(joined) => {
+              if (joined) fetchGroups(); // ✅ refresh instead of pushing
+              setShowJoinInput(false);
             }}
           />
         </motion.div>
       )}
+
+      {/* Create Group Modal */}
       {showCreateModal && (
         <CreateGroupModal
-          onCreate={(newGroup) => {
-            if (newGroup) setGroups((prev) => [...prev, newGroup]);
+          onCreate={(created) => {
+            if (created) fetchGroups(); // ✅ refresh instead of pushing
             setShowCreateModal(false);
           }}
           onCancel={() => setShowCreateModal(false)}
         />
       )}
+
       <section className="w-full max-w-6xl mt-6">
         {groups.length === 0 ? (
           <p className="text-center text-gray-500 mt-20 text-lg">
@@ -68,7 +75,6 @@ const MyGroups = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {groups.map((group) => (
-              {group},
               <GroupCard
                 key={group._id}
                 id={group._id}
@@ -77,14 +83,16 @@ const MyGroups = () => {
                 membersCount={group.members.length}
                 filesCount={group.files.length}
                 joinCode={group.joinCode}
-                isCreator={group.createdBy._id.toString() === user._id.toString()}
+                isCreator={
+                  group.createdBy._id.toString() === user._id.toString()
+                }
               />
             ))}
           </div>
         )}
       </section>
 
-
+      {/* Floating Action Button */}
       <div className="fixed bottom-8 right-8 flex flex-col items-end">
         <AnimatePresence>
           {fabOpen && (
@@ -96,7 +104,7 @@ const MyGroups = () => {
             >
               <button
                 onClick={() => {
-                  setShowJoinInput((prev) => !prev);
+                  setShowJoinInput(true);
                   setFabOpen(false);
                 }}
                 className="bg-gray-800 bg-opacity-70 backdrop-blur-md px-4 py-2 rounded-xl text-white font-semibold shadow-lg hover:bg-gray-700 transition"
@@ -126,6 +134,7 @@ const MyGroups = () => {
   );
 };
 
+// ---------------------- Group Card ----------------------
 const GroupCard = ({ id, name, createdBy, membersCount, filesCount, joinCode, isCreator }) => {
   const navigate = useNavigate();
   const handleCopy = () => {
@@ -142,20 +151,15 @@ const GroupCard = ({ id, name, createdBy, membersCount, filesCount, joinCode, is
         <p className="text-gray-300"><strong>Created By:</strong> {createdBy}</p>
         <p className="text-gray-300"><strong>Members:</strong> {membersCount}</p>
         <p className="text-gray-300"><strong>Files:</strong> {filesCount}</p>
-        {/* Show join code only if user is creator */}
         {isCreator && (
           <div className="mt-3 flex items-center gap-2 bg-gray-700 px-3 py-2 rounded-lg">
             <span className="text-gray-200 font-mono">Code: {joinCode}</span>
-            <button
-              onClick={handleCopy}
-              className="text-blue-400 hover:text-blue-300 transition"
-            >
+            <button onClick={handleCopy} className="text-blue-400 hover:text-blue-300 transition">
               <FaRegCopy />
             </button>
           </div>
         )}
       </div>
-
       <motion.button
         whileHover={{ scale: 1.05, backgroundColor: "#3b82f6" }}
         whileTap={{ scale: 0.95 }}
@@ -168,6 +172,7 @@ const GroupCard = ({ id, name, createdBy, membersCount, filesCount, joinCode, is
   );
 };
 
+// ---------------------- Join Group ----------------------
 const JoinGroupInline = ({ onJoin }) => {
   const CODE_LENGTH = 6;
   const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
@@ -200,13 +205,13 @@ const JoinGroupInline = ({ onJoin }) => {
       );
       toast.success(res.data.msg);
       setCode(Array(CODE_LENGTH).fill(""));
-      onJoin(res.data.group);
+      onJoin(true); // ✅ just notify parent
     } catch (err) {
       console.error("Error joining group:", err);
       toast.error("Invalid code!");
     }
   };
-  
+
   return (
     <motion.div
       initial={{ y: 50, opacity: 0 }}
@@ -238,7 +243,7 @@ const JoinGroupInline = ({ onJoin }) => {
         Join
       </motion.button>
       <button
-        onClick={() => onJoin(null)}
+        onClick={() => onJoin(false)}
         className="mt-4 text-gray-400 hover:text-white transition"
       >
         Cancel
@@ -247,7 +252,7 @@ const JoinGroupInline = ({ onJoin }) => {
   );
 };
 
-
+// ---------------------- Create Group ----------------------
 const CreateGroupModal = ({ onCreate, onCancel }) => {
   const [groupName, setGroupName] = useState("");
 
@@ -255,17 +260,20 @@ const CreateGroupModal = ({ onCreate, onCancel }) => {
     e.preventDefault();
     if (!groupName.trim()) return;
     try {
-      const res = await api.post("/user-group/create-group", { name: groupName }, { withCredentials: true });
-      const data = res.data;
-      if (data.group) {
-        onCreate(data.group);
+      const res = await api.post(
+        "/user-group/create-group",
+        { name: groupName },
+        { withCredentials: true }
+      );
+      if (res.data.group) {
         toast.success("Group Created Successfully");
+        onCreate(true); // ✅ just notify parent
       }
     } catch (error) {
       toast.error("Error in creating group");
       console.error("Error creating group:", error);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -310,5 +318,6 @@ const CreateGroupModal = ({ onCreate, onCancel }) => {
       </motion.div>
     </motion.div>
   );
-}
+};
+
 export default MyGroups;

@@ -40,7 +40,8 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    const backendUrl = import.meta.env.VITE_API_URL || "https://student-file-handler-backend.vercel.app";
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (

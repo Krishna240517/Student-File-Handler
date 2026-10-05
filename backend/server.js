@@ -30,6 +30,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+/* ROOT HEALTH CHECK 👇*/
+app.get("/", (req, res) => {
+    res.json({ status: "ok", message: "Student File Handler Backend API is running!" });
+});
+
 /* NORMAL AUTH 👇*/
 app.use("/api-auth",authRoutes);
 /* OAUTH 👇*/

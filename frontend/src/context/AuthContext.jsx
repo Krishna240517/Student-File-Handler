@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const res = await api.get("/api-auth/me");
-        setUser(res.data.user);
+        setUser(res.data?.user || null);
       } catch (error) {
-        console.error(error.message);
+        console.log("No active user session");
         setUser(null);
       } finally {
         setLoading(false);
@@ -23,9 +23,17 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ user, setUser, loading }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

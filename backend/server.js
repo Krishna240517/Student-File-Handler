@@ -12,10 +12,19 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
 app.use(cors({
     credentials:true,
-    origin:"http://localhost:5173"
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        callback(new Error("Not allowed by CORS"));
+    }
 }))
 app.use(express.json());
 app.use(cookieParser());
@@ -32,21 +41,34 @@ app.use("/user-group",groupRoute);
 /*FILE 👇*/
 app.use("/user-file", fileRoute);
 
-const startServer = () => {
+const connectDB = async () => {
+    if (!process.env.MONGO_URI) {
+        throw new Error("MONGO_URI is missing");
+    }
+    if (mongoose.connection.readyState >= 1) {
+        return;
+    }
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to the database");
+};
+
+const startServer = async () => {
     try {
-        mongoose.connect(process.env.MONGO_URI).then(()=>{
-            console.log("Connected to the database");
-            const port = process.env.PORT;
+        await connectDB();
+        if (!process.env.VERCEL) {
+            const port = process.env.PORT || 3000;
             app.listen(port,()=>{
                 console.log("SERVER IS RUNNING ON PORT",port);
-            })
-        }).catch(()=>{
-            console.error("Error connecting to the database");
-            process.exit(1);
-        })
+            });
+        }
     } catch(error) {
+        console.error(error);
         console.error("Error in starting the server");
+        if (!process.env.VERCEL) {
             process.exit(1);
+        }
     }
 }
 startServer();
+
+export default app;

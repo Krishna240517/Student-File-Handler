@@ -2,6 +2,7 @@ import passport from "passport";
 import express from "express";
 import jwt from "jsonwebtoken";
 const oauthRoutes = express.Router();
+const clientURL = process.env.CLIENT_URL || "http://localhost:5173";
 
 
 oauthRoutes.get("/google",
@@ -9,7 +10,7 @@ oauthRoutes.get("/google",
 );
 
 oauthRoutes.get("/google/callback",
-    passport.authenticate("google", { session: false, failureRedirect: "http://localhost:5173/signup" }),
+    passport.authenticate("google", { session: false, failureRedirect: `${clientURL}/signup` }),
     (req, res) => {
         const accessToken = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
         const refreshToken = jwt.sign({ id: req.user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
@@ -29,7 +30,7 @@ oauthRoutes.get("/google/callback",
         });
 
 
-         res.redirect("http://localhost:5173/profile");
+         res.redirect(`${clientURL}/profile`);
     }
 );
 
